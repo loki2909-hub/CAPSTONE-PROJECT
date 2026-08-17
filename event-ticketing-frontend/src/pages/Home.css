@@ -807,3 +807,6 @@ main {
     text-align: center;
   }
 }
+
+/* Evently UI refinement */
+.home-page { overflow-x: hidden; }
