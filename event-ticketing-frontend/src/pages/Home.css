@@ -813,3 +813,7 @@ main {
 
 /* Evently card polish - Commit 4 */
 .event-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+
+/* Evently button polish - Commit 5 */
+.event-bottom button { transition: all 0.25s ease; }
+.event-bottom button:hover { transform: translateY(-2px); }
