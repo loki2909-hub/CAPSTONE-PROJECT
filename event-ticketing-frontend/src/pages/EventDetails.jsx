@@ -2,105 +2,76 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
   CalendarDays,
-  Clock,
+  Clock3,
   MapPin,
   Ticket,
   Star,
-  CheckCircle
+  CheckCircle2,
+  BadgeCheck,
 } from "lucide-react";
 
-const events = {
-  1: {
-    title: "AR Rahman Live in Concert",
-    category: "Music",
+const events = [
+  {
+    id: 1,
+    slug: "music-festival",
+    title: "Chennai Music Festival",
+    category: "Live Music",
     location: "Chennai, Tamil Nadu",
-    date: "August 24, 2026",
+    date: "December 20, 2026",
     time: "7:00 PM",
-    price: 799,
+    price: 999,
     rating: "4.9",
+    seatsAvailable: 128,
     image:
       "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1200&q=80",
     description:
-      "Experience an unforgettable evening of music and entertainment. Enjoy a spectacular live performance with amazing sound, lights and an energetic atmosphere.",
+      "A cinematic live music experience with headline acts, immersive lighting, and an energetic atmosphere that brings the city together in one unforgettable night.",
   },
-  2: {
-    title: "Chennai Super Sports Night",
+  {
+    id: 2,
+    slug: "cultural-festival",
+    title: "Summer Cultural Festival",
+    category: "Festival",
+    location: "Chennai, Tamil Nadu",
+    date: "January 12, 2027",
+    time: "5:30 PM",
+    price: 799,
+    rating: "4.8",
+    seatsAvailable: 84,
+    image:
+      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80",
+    description:
+      "Celebrate culture, creativity, and community with live performances, food stalls, artisan showcases, and vibrant installations across a grand open-air venue.",
+  },
+  {
+    id: 3,
+    slug: "cricket-championship",
+    title: "Cricket Championship",
     category: "Sports",
     location: "Chennai, Tamil Nadu",
-    date: "September 05, 2026",
+    date: "February 05, 2027",
     time: "6:30 PM",
-    price: 999,
-    rating: "4.8",
-    image:
-      "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80",
-    description:
-      "Experience an exciting night of sports action with thousands of fans. Get your seats and enjoy the live atmosphere.",
-  },
-  3: {
-    title: "International Movie Festival",
-    category: "Movies",
-    location: "Coimbatore, Tamil Nadu",
-    date: "September 12, 2026",
-    time: "5:00 PM",
-    price: 499,
-    rating: "4.7",
-    image:
-      "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=80",
-    description:
-      "Enjoy a collection of exciting movies and special screenings at this international movie festival.",
-  },
-  4: {
-    title: "Stand Up Comedy Night",
-    category: "Comedy",
-    location: "Bangalore, Karnataka",
-    date: "September 18, 2026",
-    time: "8:00 PM",
     price: 599,
     rating: "4.9",
+    seatsAvailable: 154,
     image:
-      "https://images.unsplash.com/photo-1585699324551-f6c309eedeca?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&w=1200&q=80",
     description:
-      "Laugh out loud with an amazing lineup of comedians performing live on stage.",
+      "Witness the thrill of a marquee sporting clash with roaring fans, premium viewing zones, and an unforgettable stadium atmosphere.",
   },
-  5: {
-    title: "Live Music Festival",
-    category: "Music",
-    location: "Bangalore, Karnataka",
-    date: "September 25, 2026",
-    time: "6:00 PM",
-    price: 899,
-    rating: "4.8",
-    image:
-      "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1200&q=80",
-    description:
-      "A complete music festival experience featuring live performances, great artists and an unforgettable crowd.",
-  },
-  6: {
-    title: "Championship Football",
-    category: "Sports",
-    location: "Chennai, Tamil Nadu",
-    date: "October 03, 2026",
-    time: "7:30 PM",
-    price: 699,
-    rating: "4.8",
-    image:
-      "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1200&q=80",
-    description:
-      "Watch an exciting championship football match live from the stadium and experience the energy of the crowd.",
-  }
-};
+];
 
 function EventDetails() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
 
-  const event = events[id];
+  const event = events.find((entry) => entry.slug === slug || String(entry.id) === slug);
 
   if (!event) {
     return (
       <div className="details-not-found">
         <h2>Event Not Found</h2>
-        <button onClick={() => navigate("/")}>
+        <button type="button" onClick={() => navigate("/home")}>
           Back to Home
         </button>
       </div>
@@ -109,47 +80,33 @@ function EventDetails() {
 
   return (
     <div className="details-page">
-      <div className="details-container">
-
-        <button
-          className="back-button"
-          onClick={() => navigate("/")}
-        >
+      <div className="details-shell">
+        <button type="button" className="back-button" onClick={() => navigate("/home")}>
           <ArrowLeft size={18} />
           Back to Events
         </button>
 
         <div className="details-card">
-
           <div className="details-image">
             <img src={event.image} alt={event.title} />
-
-            <span className="details-category">
-              {event.category}
-            </span>
+            <span className="details-category">{event.category}</span>
           </div>
 
           <div className="details-content">
-
-            <div className="details-title-row">
+            <div className="details-heading-row">
               <div>
-                <span className="details-label">
-                  EVENT DETAILS
-                </span>
-
+                <span className="details-label">Event Details</span>
                 <h1>{event.title}</h1>
               </div>
-
               <div className="details-rating">
                 <Star size={18} fill="currentColor" />
                 {event.rating}
               </div>
             </div>
 
-            <div className="details-info">
-
+            <div className="details-meta">
               <div className="info-box">
-                <CalendarDays size={21} />
+                <CalendarDays size={19} />
                 <div>
                   <span>Date</span>
                   <strong>{event.date}</strong>
@@ -157,7 +114,7 @@ function EventDetails() {
               </div>
 
               <div className="info-box">
-                <Clock size={21} />
+                <Clock3 size={19} />
                 <div>
                   <span>Time</span>
                   <strong>{event.time}</strong>
@@ -165,62 +122,41 @@ function EventDetails() {
               </div>
 
               <div className="info-box">
-                <MapPin size={21} />
+                <MapPin size={19} />
                 <div>
                   <span>Location</span>
                   <strong>{event.location}</strong>
                 </div>
               </div>
-
             </div>
 
             <div className="about-event">
-              <h2>About the Event</h2>
-
-              <p>
-                {event.description}
-              </p>
+              <h2>About This Event</h2>
+              <p>{event.description}</p>
 
               <div className="event-features">
-
-                <div>
-                  <CheckCircle size={17} />
-                  Verified Event
-                </div>
-
-                <div>
-                  <CheckCircle size={17} />
-                  Secure Booking
-                </div>
-
-                <div>
-                  <CheckCircle size={17} />
-                  Instant Confirmation
-                </div>
-
+                <div><CheckCircle2 size={17} /> Verified Event</div>
+                <div><BadgeCheck size={17} /> Secure Booking</div>
+                <div><CheckCircle2 size={17} /> Instant Confirmation</div>
               </div>
             </div>
 
             <div className="booking-panel">
-
               <div className="booking-price">
                 <span>Ticket price starting from</span>
                 <strong>₹{event.price}</strong>
                 <small>per person</small>
               </div>
 
-              <button
-                className="select-seat-button"
-                onClick={() =>
-                  navigate(`/seat-booking/${id}`)
-                }
-              >
-                <Ticket size={19} />
+              <div className="booking-side-info">
+                <span>{event.seatsAvailable} seats available</span>
+              </div>
+
+              <button type="button" className="select-seat-button" onClick={() => navigate(`/seat-booking/${event.slug}`)}>
+                <Ticket size={18} />
                 Select Seats
               </button>
-
             </div>
-
           </div>
         </div>
       </div>

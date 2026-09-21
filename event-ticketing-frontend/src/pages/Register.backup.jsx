@@ -11,6 +11,7 @@ import {
   ArrowRight,
   Check
 } from "lucide-react";
+import API_BASE_URL from "../config/api";
 
 function Register() {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ function Register() {
       setLoading(true);
 
       const response = await fetch(
-        "http://localhost:5000/api/auth/register",
+        `${API_BASE_URL}/api/auth/register`,
         {
           method: "POST",
           headers: {

@@ -7,12 +7,15 @@ import {
   Eye,
   EyeOff,
   ArrowLeft,
-  ArrowRight
+  ArrowRight,
+  Sparkles,
+  CalendarDays,
+  MapPin,
 } from "lucide-react";
+import API_BASE_URL from "../config/api";
 
 function Login() {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -26,19 +29,13 @@ function Login() {
     }
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            email,
-            password
-          })
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
       const data = await response.json();
 
@@ -47,11 +44,7 @@ function Login() {
         return;
       }
 
-      const token =
-        data.token ||
-        data.accessToken ||
-        data.data?.token ||
-        data.data?.accessToken;
+      const token = data.token || data.accessToken || data.data?.token || data.data?.accessToken;
 
       if (!token) {
         console.log("Backend login response:", data);
@@ -62,14 +55,10 @@ function Login() {
       localStorage.setItem("token", token);
 
       if (data.user) {
-        localStorage.setItem(
-          "user",
-          JSON.stringify(data.user)
-        );
+        localStorage.setItem("user", JSON.stringify(data.user));
       }
 
       navigate("/home", { replace: true });
-
     } catch (error) {
       console.error("Login error:", error);
       alert("Unable to connect to the server.");
@@ -83,184 +72,105 @@ function Login() {
   };
 
   return (
-    <div>
-      <div className="login-decoration decoration-one"></div>
-      <div className="login-decoration decoration-two"></div>
-
-      <div className="login-wrapper">
-
-        <button
-          type="button"
-          className="back-home"
-          onClick={() => navigate("/")}
-        >
+    <div className="auth-page login-page">
+      <div className="auth-shell">
+        <button type="button" className="back-home" onClick={() => navigate("/")}>
           <ArrowLeft size={17} />
           Back to Home
         </button>
 
-        <div className="login-card">
-
-          <div className="login-brand">
-            <div className="login-brand-icon">
-              <Ticket size={25} />
+        <div className="auth-panel">
+          <div className="auth-visual">
+            <div className="auth-visual-overlay" />
+            <div className="auth-brand">
+              <div className="auth-brand-icon">
+                <Ticket size={24} />
+              </div>
+              <span>Evently</span>
             </div>
 
-            <span>
-              Event<span>ly</span>
-            </span>
+            <div className="auth-visual-copy">
+              <div className="pulse-badge">
+                <Sparkles size={16} />
+                Curated experiences
+              </div>
+              <h1>Find your next unforgettable night.</h1>
+              <p>Book live music, sports, theatre, and festivals with a premium seamless experience.</p>
+            </div>
+
+            <div className="auth-mini-cards">
+              <div>
+                <CalendarDays size={16} />
+                <span>120+ events</span>
+              </div>
+              <div>
+                <MapPin size={16} />
+                <span>Across 12 cities</span>
+              </div>
+            </div>
           </div>
 
-          <div className="login-heading">
-            <h1>Welcome Back</h1>
+          <div className="auth-card">
+            <div className="auth-header">
+              <span className="eyebrow">Welcome back</span>
+              <h2>Sign In</h2>
+            </div>
 
-            <p>
-              Sign in to discover and book
-              unforgettable experiences.
-            </p>
-          </div>
-
-          <form onSubmit={handleLogin}>
-
-            <div className="login-form-group">
-
-              <label>
-                Email Address
+            <form onSubmit={handleLogin} className="auth-form">
+              <label className="auth-field">
+                <span>Email Address</span>
+                <div className="auth-input">
+                  <Mail size={18} />
+                  <input
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
               </label>
 
-              <div className="login-input">
+              <label className="auth-field">
+                <span>Password</span>
+                <div className="auth-input">
+                  <Lock size={18} />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <button type="button" className="show-password" onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </label>
 
-                <Mail size={18} />
-
-                <input
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) =>
-                    setEmail(e.target.value)
-                  }
-                />
-
-              </div>
-
-            </div>
-
-            <div className="login-form-group">
-
-              <div className="password-header">
-
-                <label>
-                  Password
+              <div className="auth-actions-row">
+                <label className="remember-me">
+                  <input type="checkbox" />
+                  <span>Remember me</span>
                 </label>
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    alert(
-                      "Password reset feature coming soon."
-                    )
-                  }
-                >
+                <button type="button" className="link-button" onClick={() => alert("Password reset feature coming soon.")}>
                   Forgot password?
                 </button>
-
               </div>
 
-              <div className="login-input">
+              <button type="submit" className="auth-primary-button">
+                Sign In
+                <ArrowRight size={18} />
+              </button>
+            </form>
 
-                <Lock size={18} />
-
-                <input
-                  type={
-                    showPassword
-                      ? "text"
-                      : "password"
-                  }
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) =>
-                    setPassword(e.target.value)
-                  }
-                />
-
-                <button
-                  type="button"
-                  className="show-password"
-                  onClick={() =>
-                    setShowPassword(!showPassword)
-                  }
-                >
-                  {showPassword ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
-                </button>
-
-              </div>
-
+            <div className="auth-footer">
+              <span>New here?</span>
+              <button type="button" onClick={() => navigate("/register")}>Create account</button>
             </div>
 
-            <div className="remember-row">
-
-              <label className="remember">
-
-                <input type="checkbox" />
-
-                <span>
-                  Remember me
-                </span>
-
-              </label>
-
-            </div>
-
-            <button
-              type="submit"
-              className="login-main-button"
-            >
-              Sign In
-              <ArrowRight size={18} />
-            </button>
-
-          </form>
-
-          <div className="login-or">
-            <span></span>
-            <p>OR</p>
-            <span></span>
+            <button type="button" className="secondary-link" onClick={handleGuest}>Continue as guest</button>
           </div>
-
-          <button
-            type="button"
-            className="guest-login"
-            onClick={handleGuest}
-          >
-            Continue as Guest
-          </button>
-
-          <div className="create-account">
-
-            <span>
-              Don't have an account?
-            </span>
-
-            <button
-              type="button"
-              onClick={() =>
-                navigate("/register")
-              }
-            >
-              Create Account
-            </button>
-
-          </div>
-
         </div>
-
-        <p className="login-copyright">
-          © 2026 Evently · Secure event ticketing platform
-        </p>
-
       </div>
     </div>
   );
